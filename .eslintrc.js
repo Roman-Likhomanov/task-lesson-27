@@ -12,6 +12,9 @@ module.exports = {
   },
   plugins: ["jest", "@typescript-eslint"],
   rules: {
+    "class-methods-use-this": "off",
+    "max-len": "off",
+    "no-proto": "off",
     "no-undef": "off",
     "no-console": "off",
     "import/extensions": "off",
@@ -19,12 +22,12 @@ module.exports = {
     "no-plusplus": "off",
     "default-case": "off",
     "no-useless-escape": "off",
-    "max-len": [
-      "error",
-      {
-        ignoreComments: true,
-      },
-    ],
+    // "max-len": [
+    //   "error",
+    //   {
+    //     ignoreComments: true,
+    //   },
+    // ],
     "import/prefer-default-export": "off",
   },
 };
