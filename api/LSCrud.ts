@@ -1,4 +1,4 @@
-import { ITask , ICrud } from "./index";
+import { ITask, ICrud } from "./index";
 
 export class LSCrud implements ICrud {
   create(id: number, task: ITask): void {
@@ -13,9 +13,9 @@ export class LSCrud implements ICrud {
 
   async update(id: number): Promise<void> {
     const result = localStorage.getItem(`${id}`);
-    const task = JSON.parse(result as string) as ITask;
-    const newTask = task;
-    localStorage.setItem(`${id}`, JSON.stringify(newTask));
+    let task = JSON.parse(result as string) as ITask;
+    task = { ...task, text: "Новое задание" };
+    localStorage.setItem(`${id}`, JSON.stringify(task));
   }
 
   delete(id: number): void {

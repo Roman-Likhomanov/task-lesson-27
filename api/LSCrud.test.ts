@@ -42,30 +42,26 @@ describe("LSCrud", () => {
     });
   });
 
-  // it("update task", () => {
-  //     const task: ITask = {
-  //         id: 1,
-  //         date: new Date("01.06.1987"),
-  //         text: "string",
-  //         tag: ["tag"],
-  //         status: true,
-  //     };
+  it("update task", () => {
+    const task: ITask = {
+      id: 1,
+      date: new Date("01.06.1987"),
+      text: "string",
+      tag: ["tag"],
+      status: true,
+    };
 
-  //     jest.spyOn(window.localStorage.__proto__, "setItem");
-  //     jest.spyOn(window.localStorage.__proto__, "getItem");
+    jest.spyOn(window.localStorage.__proto__, "setItem");
+    jest.spyOn(window.localStorage.__proto__, "getItem");
 
-  //     let crud = new LSCrud();
-  //     crud.create(1, task);
-  //     crud.read(1);
-  //     task.text = "new";
-  //     expect(crud.update(1)).resolves.toBe({
-  //         id: 1,
-  //         date: new Date("01.06.1987"),
-  //         text: "new",
-  //         tag: ["tag"],
-  //         status: true,
-  //     }) ;
-  // })
+    const crud = new LSCrud();
+    crud.create(1, task);
+    crud.update(1);
+    expect(localStorage.setItem).toHaveBeenCalledWith(
+      "1",
+      '{"id":1,"date":"1987-01-05T21:00:00.000Z","text":"Новое задание","tag":["tag"],"status":true}'
+    );
+  });
 
   it("delete task", () => {
     const task: ITask = {
