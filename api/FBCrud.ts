@@ -1,6 +1,6 @@
-import firebase from "firebase/app";
+import { initializeApp } from "firebase/app";
+import { getDatabase, ref, set } from "firebase/database";
 import { ITask, ICrud } from "./index";
-import "firebase/database";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAne10qyc09oi6o6tJAJQoS-kPDgTPXIpU",
@@ -13,23 +13,21 @@ const firebaseConfig = {
   appId: "1:1056013737331:web:f5dbfbce60c8bcd22ab906",
 };
 
-firebase.initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
 export class FBCrud implements ICrud {
   create(id: number, task: ITask): void {
-    const db = firebase.database();
     db.ref(`${id}`).push(JSON.stringify(task));
   }
 
   async read(id: number): Promise<ITask> {
-    const db = firebase.database();
     const result = db.ref(`${id}`);
     const task = result.on("value", (elem) => elem.val());
     return task;
   }
 
   async update(id: number): Promise<void> {
-    const db = firebase.database();
     const result = db.ref(`${id}`);
     let task = result.on("value", (elem) => elem.val());
     task = { ...task, text: "Новое задание" };
@@ -37,12 +35,11 @@ export class FBCrud implements ICrud {
   }
 
   delete(id: number): void {
-    firebase.database().ref(`${id}`).remove();
+    db.ref(`${id}`).remove();
   }
 
   async filterByTag(tag: string): Promise<ITask> {
     const arrFilter: ITask[] = [];
-    const db = firebase.database();
     const result = db.ref("tasks");
     const tasks = result.on("value", (elem) => elem.val());
     tasks.forEach((el: ITask) => {
@@ -55,7 +52,6 @@ export class FBCrud implements ICrud {
 
   async filterByText(text: string): Promise<ITask> {
     const arrFilter: ITask[] = [];
-    const db = firebase.database();
     const result = db.ref("tasks");
     const tasks = result.on("value", (elem) => elem.val());
     tasks.forEach((el: ITask) => {
@@ -68,7 +64,6 @@ export class FBCrud implements ICrud {
 
   async filterByDate(date: Date): Promise<ITask> {
     const arrFilter: ITask[] = [];
-    const db = firebase.database();
     const result = db.ref("tasks");
     const tasks = result.on("value", (elem) => elem.val());
     tasks.forEach((el: ITask) => {
@@ -81,7 +76,6 @@ export class FBCrud implements ICrud {
 
   async filterByStatus(status: boolean): Promise<ITask> {
     const arrFilter: ITask[] = [];
-    const db = firebase.database();
     const result = db.ref("tasks");
     const tasks = result.on("value", (elem) => elem.val());
     tasks.forEach((el: ITask) => {
