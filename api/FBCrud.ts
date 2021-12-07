@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getDatabase, ref, set } from "firebase/database";
+import { getDatabase, ref, set, onValue } from "firebase/database";
 import { ITask, ICrud } from "./index";
 
 const firebaseConfig = {
@@ -17,72 +17,37 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 export class FBCrud implements ICrud {
-  create(id: number, task: ITask): void {
-    db.ref(`${id}`).push(JSON.stringify(task));
+  constructor(collection: string) {
+    this.collection = collection;
+  }
+
+  async create(id: number, task: ITask): Promise<boolean> {
+    try {
+      await set(ref(db, `${this.collection}/${id}`), task);
+    } catch (e) {
+      return false;
+    }
+    return true;
   }
 
   async read(id: number): Promise<ITask> {
-    const result = db.ref(`${id}`);
-    const task = result.on("value", (elem) => elem.val());
-    return task;
+    try {
+      const refer = await ref(db, `${this.collection}/${id}`);
+      const value = onValue(refer, (el) => el.val());
+      return value;
+    } catch (e) {
+      return false;
+    }
   }
 
-  async update(id: number): Promise<void> {
-    const result = db.ref(`${id}`);
-    let task = result.on("value", (elem) => elem.val());
-    task = { ...task, text: "Новое задание" };
-    db.ref(`${id}`).push(JSON.stringify(task));
-  }
+  // async update(id: number): Promise<void> {
+  //   const result = db.ref(`${id}`);
+  //   let task = result.on("value", (elem) => elem.val());
+  //   task = { ...task, text: "Новое задание" };
+  //   db.ref(`${id}`).push(JSON.stringify(task));
+  // }
 
-  delete(id: number): void {
-    db.ref(`${id}`).remove();
-  }
-
-  async filterByTag(tag: string): Promise<ITask> {
-    const arrFilter: ITask[] = [];
-    const result = db.ref("tasks");
-    const tasks = result.on("value", (elem) => elem.val());
-    tasks.forEach((el: ITask) => {
-      if (el.tag.includes(tag)) {
-        arrFilter.push(el);
-      }
-    });
-    return arrFilter;
-  }
-
-  async filterByText(text: string): Promise<ITask> {
-    const arrFilter: ITask[] = [];
-    const result = db.ref("tasks");
-    const tasks = result.on("value", (elem) => elem.val());
-    tasks.forEach((el: ITask) => {
-      if (el.text.includes(text)) {
-        arrFilter.push(el);
-      }
-    });
-    return arrFilter;
-  }
-
-  async filterByDate(date: Date): Promise<ITask> {
-    const arrFilter: ITask[] = [];
-    const result = db.ref("tasks");
-    const tasks = result.on("value", (elem) => elem.val());
-    tasks.forEach((el: ITask) => {
-      if (el.date === date) {
-        arrFilter.push(el);
-      }
-    });
-    return arrFilter;
-  }
-
-  async filterByStatus(status: boolean): Promise<ITask> {
-    const arrFilter: ITask[] = [];
-    const result = db.ref("tasks");
-    const tasks = result.on("value", (elem) => elem.val());
-    tasks.forEach((el: ITask) => {
-      if (el.status === status) {
-        arrFilter.push(el);
-      }
-    });
-    return arrFilter;
-  }
+  // delete(id: number): void {
+  //   db.ref(`${id}`).remove();
+  // }
 }

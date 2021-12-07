@@ -12,9 +12,11 @@ module.exports = {
   },
   plugins: ["jest", "@typescript-eslint"],
   rules: {
+    "@typescript-eslint/no-unused-var": "off",
+    "consistent-return": "off",
+    "max-len": "off",
     "no-unused-vars": "off",
     "class-methods-use-this": "off",
-    "max-len": "off",
     "no-proto": "off",
     "no-undef": "off",
     "no-console": "off",
