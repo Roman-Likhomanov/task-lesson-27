@@ -1,5 +1,14 @@
 import { initializeApp } from "firebase/app";
-import { getDatabase, ref, set, onValue } from "firebase/database";
+import {
+  getDatabase,
+  ref,
+  set,
+  child,
+  get,
+  update,
+  push,
+  remove,
+} from "firebase/database";
 import { ITask, ICrud } from "./index";
 
 const firebaseConfig = {
@@ -23,7 +32,7 @@ export class FBCrud implements ICrud {
 
   async create(id: number, task: ITask): Promise<boolean> {
     try {
-      await set(ref(db, `${this.collection}/${id}`), task);
+      await set(ref(db, `${this.collection}/${id}`), JSON.stringify(task));
     } catch (e) {
       return false;
     }
@@ -31,23 +40,29 @@ export class FBCrud implements ICrud {
   }
 
   async read(id: number): Promise<ITask> {
-    try {
-      const refer = await ref(db, `${this.collection}/${id}`);
-      const value = onValue(refer, (el) => el.val());
-      return value;
-    } catch (e) {
-      return false;
-    }
+    const dbRef = ref(db);
+    return get(child(dbRef, `${this.collection}/${id}`))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          return snapshot.val();
+        } 
+          console.log("No data available");
+        
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
-  // async update(id: number): Promise<void> {
-  //   const result = db.ref(`${id}`);
-  //   let task = result.on("value", (elem) => elem.val());
-  //   task = { ...task, text: "Новое задание" };
-  //   db.ref(`${id}`).push(JSON.stringify(task));
-  // }
+  async update(id: number, patch: Partial<ITask>): Promise<void> {
+    const newPostKey = push(child(ref(db), "posts")).key;
+    const updates = {};
+    updates[`${this.collection}/${id}`] = { ...task, ...patch };
 
-  // delete(id: number): void {
-  //   db.ref(`${id}`).remove();
-  // }
+    return update(ref(db), updates);
+  }
+
+  delete(id: number): void {
+    remove(ref(db, `${this.collection}/${id}`));
+  }
 }
