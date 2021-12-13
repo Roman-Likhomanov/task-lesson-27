@@ -16,7 +16,7 @@ export class LSCrud implements ICrud {
     }
   }
 
-  async update(id: number, patch: Partial<ITask>): Promise<void> {
+  async updateTask(id: number, patch: Partial<ITask>): Promise<void> {
     await null;
     const result = localStorage.getItem(`${id}`);
     if (result != null) {

@@ -24,9 +24,9 @@ describe("FBCrud", () => {
       status: true,
     };
 
-    const crud = new FBCrud("newTest");
+    const crud = new FBCrud("test");
     crud.create(1, task);
-    crud.update(1, { text: "Новое задание" });
+    crud.updateTask(1, { text: "Новое задание" });
     expect(crud.read(1)).resolves.toStrictEqual({
       id: 1,
       date: "1987-01-05T21:00:00.000Z",

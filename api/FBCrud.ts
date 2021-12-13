@@ -6,7 +6,6 @@ import {
   child,
   get,
   update,
-  push,
   remove,
 } from "firebase/database";
 import { ITask, ICrud } from "./index";
@@ -26,6 +25,8 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 export class FBCrud implements ICrud {
+  private collection;
+
   constructor(collection: string) {
     this.collection = collection;
   }
@@ -45,21 +46,34 @@ export class FBCrud implements ICrud {
       .then((snapshot) => {
         if (snapshot.exists()) {
           return snapshot.val();
-        } 
-          console.log("No data available");
-        
+        }
+        console.log("No data available");
       })
       .catch((error) => {
         console.error(error);
       });
   }
 
-  async update(id: number, patch: Partial<ITask>): Promise<void> {
-    const newPostKey = push(child(ref(db), "posts")).key;
-    const updates = {};
-    updates[`${this.collection}/${id}`] = { ...task, ...patch };
+  async updateTask(id: number, patch: Partial<ITask>): Promise<void> {
+    const that = this;
+    function readTask() {
+      return get(child(ref(db), `${that.collection}/${id}`))
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            return snapshot.val();
+          } 
+            console.log("No data available");
+          
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+    const result = await readTask();
+    let task = JSON.parse(result as string) as ITask;
+    task = { ...task, ...patch };
 
-    return update(ref(db), updates);
+    await update(ref(db, `${this.collection}/${id}`), task);
   }
 
   delete(id: number): void {

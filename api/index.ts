@@ -9,6 +9,6 @@ export interface ITask {
 export interface ICrud {
   create: (id: number, task: ITask) => void;
   read: (id: number) => Promise<ITask> | null;
-  update: (id: number, { text: string }) => Promise<void> | null;
+  updateTask: (id: number, patch: Partial<ITask>) => Promise<void> | null;
   delete: (id: number) => void;
 }
