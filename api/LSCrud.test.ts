@@ -25,7 +25,7 @@ describe("LSCrud", () => {
   it("read task", () => {
     const task: ITask = {
       id: 1,
-      date: new Date(2014, 0, 30),
+      date: new Date("01.06.1987"),
       text: "string",
       tag: ["tag"],
       status: true,
@@ -35,7 +35,7 @@ describe("LSCrud", () => {
     crud.create(1, task);
     expect(crud.read(1)).resolves.toStrictEqual({
       id: 1,
-      date: "2014-01-29T20:00:00.000Z",
+      date: "1987-01-05T21:00:00.000Z",
       text: "string",
       tag: ["tag"],
       status: true,
