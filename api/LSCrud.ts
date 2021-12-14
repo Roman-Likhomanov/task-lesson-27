@@ -7,13 +7,14 @@ export class LSCrud implements ICrud {
     }
   }
 
-  async read(id: number): Promise<ITask> {
+  async read(id: number): Promise<ITask | null> {
     await null;
     const result = localStorage.getItem(`${id}`);
     if (result != null) {
       const task = JSON.parse(result as string) as ITask;
       return task;
     }
+    return null;
   }
 
   async updateTask(id: number, patch: Partial<ITask>): Promise<void> {

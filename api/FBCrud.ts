@@ -61,9 +61,8 @@ export class FBCrud implements ICrud {
         .then((snapshot) => {
           if (snapshot.exists()) {
             return snapshot.val();
-          } 
-            console.log("No data available");
-          
+          }
+          console.log("No data available");
         })
         .catch((error) => {
           console.error(error);

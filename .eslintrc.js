@@ -15,7 +15,6 @@ module.exports = {
     "@typescript-eslint/no-this-alias": "off",
     "@typescript-eslint/no-unused-var": "off",
     "consistent-return": "off",
-    "max-len": "off",
     "no-unused-vars": "off",
     "class-methods-use-this": "off",
     "no-proto": "off",
@@ -26,12 +25,12 @@ module.exports = {
     "no-plusplus": "off",
     "default-case": "off",
     "no-useless-escape": "off",
-    // "max-len": [
-    //   "error",
-    //   {
-    //     ignoreComments: true,
-    //   },
-    // ],
+    "max-len": [
+      "error",
+      {
+        ignoreComments: true,
+      },
+    ],
     "import/prefer-default-export": "off",
   },
 };
