@@ -43,7 +43,9 @@ describe("LSCrud", () => {
   });
 
   it("update task", () => {
-    jest.useFakeTimers("modern").setSystemTime(new Date("01.06.1987"));
+    jest
+      .useFakeTimers("modern")
+      .setSystemTime(new Date("1987-01-05T21:00:00.000Z"));
 
     const task: ITask = {
       id: 1,
