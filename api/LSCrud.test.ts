@@ -23,10 +23,6 @@ describe("LSCrud", () => {
   });
 
   it("read task", () => {
-    jest
-      .useFakeTimers("modern")
-      .setSystemTime(new Date("1987-01-05T21:00:00.000Z"));
-
     const task: ITask = {
       id: 1,
       date: new Date("01.06.1987"),
@@ -37,13 +33,7 @@ describe("LSCrud", () => {
 
     const crud = new LSCrud();
     crud.create(1, task);
-    expect(crud.read(1)).resolves.toStrictEqual({
-      id: 1,
-      date: "1987-01-05T21:00:00.000Z",
-      text: "string",
-      tag: ["tag"],
-      status: true,
-    });
+    expect(crud.read(1)).resolves.toBe(task);
   });
 
   it("update task", () => {
